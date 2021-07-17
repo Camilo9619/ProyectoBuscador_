@@ -1,0 +1,46 @@
+<div class="card">
+    <div class="ng-autocomplete container">
+        <h1>Consulta de códigos CIE10 ("Clasificación Internacional de Enfermedades")</h1>
+        <br>
+        <ng-autocomplete
+          [data]="data$ |async"
+          [searchKeyword]="keyword"
+          [itemTemplate]="itemTemplate"
+          [(ngModel)]="filterPost"
+          name="filterPost"
+          placeholder="Ingrese el codigo o descripcion"
+          [notFoundTemplate]="notFoundTemplate">                                 
+        </ng-autocomplete>
+        
+        <ng-template #itemTemplate let-item>
+        <a [innerHTML]="item.name"></a>
+        </ng-template>
+        
+        <ng-template #notFoundTemplate let-notFound>
+        <div [innerHTML]="notFound"></div>
+        </ng-template>
+    </div>
+    <br>
+    <div class="container">
+      <table class="table table-bordered">
+          <thead>
+            <tr>
+                <td>Código</td>
+                <td>Descripción</td>
+                <td>Sexo</td>
+                <td>Limite Inferior</td>
+                <td>Limite Superior</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let array of datos | pipes:filterPost">
+                <td>{{array['cod']}}</td>
+                <td>{{array['name']}}</td>
+                <td>{{array['sexo']}}</td>
+                <td>{{array['liminferior']}}</td>
+                <td>{{array['limsuperior']}}</td>
+            </tr>
+          </tbody>
+      </table>
+    </div>
+  </div>
