@@ -1,3 +1,4 @@
+  
 import { Component, OnInit } from '@angular/core';
 import { DataServicesService } from '../data-services.service';
 import { HttpClient } from '@angular/common/http';
@@ -26,6 +27,7 @@ export class AplicacionComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.ImprimirDatos();
     this.obtenerdatos();
   }
   ImprimirDatos(){
@@ -37,7 +39,7 @@ export class AplicacionComponent implements OnInit {
     });
   }
   obtenerdatos():void{
-   
+    this.data$=this.dataserv.obtenerdatosAPI();
   }
   datoentrada(value:any){
     console.log(value);
@@ -46,8 +48,8 @@ export class AplicacionComponent implements OnInit {
     let url='https://medlab.xhygnusnews.com/public/api/Cie10';
     let busqueda=url+value;
     debugger;
-    if(busqueda.length>3){
-      this.http.get('https://medlab.xhygnusnews.com/public/api/Cie10?ml=')
+    if(value.length>3){
+      this.http.get(busqueda)
       .subscribe(data=>{
       this.conversion=data;
       this.datos=this.conversion;
