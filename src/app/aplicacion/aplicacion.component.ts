@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { DataServicesService } from '../data-services.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+ 
+
 
 @Component({
   selector: 'app-aplicacion',
@@ -10,6 +12,8 @@ import { Observable } from 'rxjs';
   providers:[DataServicesService]
 })
 export class AplicacionComponent implements OnInit {
+ usuario=new Usuario();
+ 
   public keyword="name";
   public data$: Observable<any[]>;
   conversion: any;
@@ -22,7 +26,6 @@ export class AplicacionComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.ImprimirDatos();
     this.obtenerdatos();
   }
   ImprimirDatos(){
@@ -34,6 +37,25 @@ export class AplicacionComponent implements OnInit {
     });
   }
   obtenerdatos():void{
-    this.data$=this.dataserv.obtenerdatosAPI();
+   
   }
+  datoentrada(value:any){
+    console.log(value);
+    console.log(this.usuario.dato);
+    this.usuario.dato=value;
+    let url='https://medlab.xhygnusnews.com/public/api/Cie10';
+    let busqueda=url+value;
+    debugger;
+    if(busqueda.length>3){
+      this.http.get('https://medlab.xhygnusnews.com/public/api/Cie10?ml=')
+      .subscribe(data=>{
+      this.conversion=data;
+      this.datos=this.conversion;
+      this.data$=this.dataserv.obtenerdatosAPI();
+      });
+    }
+  }
+}
+export class Usuario{
+  dato:string;
 }

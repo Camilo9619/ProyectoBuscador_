@@ -7,6 +7,8 @@
           [searchKeyword]="keyword"
           [itemTemplate]="itemTemplate"
           [(ngModel)]="filterPost"
+          [(ngModel)]="usuario.dato"
+          (ngModelChange)="datoentrada($event)"
           name="filterPost"
           placeholder="Ingrese el codigo o descripcion"
           [notFoundTemplate]="notFoundTemplate">                                 
