@@ -27,8 +27,8 @@ export class AplicacionComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.ImprimirDatos();
-    this.obtenerdatos();
+   this.ImprimirDatos();
+   this.obtenerdatos();
   }
   ImprimirDatos(){
     this.http.get('https://medlab.xhygnusnews.com/public/api/Cie10')
@@ -45,7 +45,7 @@ export class AplicacionComponent implements OnInit {
     console.log(value);
     console.log(this.usuario.dato);
     this.usuario.dato=value;
-    let url='https://medlab.xhygnusnews.com/public/api/Cie10';
+    let url='https://medlab.xhygnusnews.com/public/api/Cie10?ml=';
     let busqueda=url+value;
     debugger;
     if(value.length>3){
