@@ -7,8 +7,10 @@ import { AplicacionComponent } from './aplicacion/aplicacion.component';
 import { PipesPipe } from './pipes.pipe';
 import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import {AutocompleteLibModule} from 'angular-ng-autocomplete';
-
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatTableModule} from '@angular/material/table';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 @NgModule({
   declarations: [
     AppComponent,
@@ -21,7 +23,11 @@ import {AutocompleteLibModule} from 'angular-ng-autocomplete';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AutocompleteLibModule
+    AutocompleteLibModule,
+    BrowserAnimationsModule,
+    MatTableModule,
+    MatFormFieldModule,
+    MatAutocompleteModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

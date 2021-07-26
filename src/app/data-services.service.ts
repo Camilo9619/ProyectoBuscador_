@@ -1,14 +1,18 @@
 import { Injectable } from '@angular/core';
 import {HttpClientModule,HttpClient} from '@angular/common/http';
-import { Observable } from 'rxjs';
-
+import { Observable, of, Subscription } from 'rxjs';
+import { tap, startWith, debounceTime, distinctUntilChanged, switchMap, map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
+
 export class DataServicesService {
-  private URL='https://medlab.xhygnusnews.com/public/api/Cie10';
-  constructor(private http:HttpClient){ }
-  obtenerdatosAPI():Observable<any[]>{
-   return this.http.get<any[]>(this.URL);
+  constructor(private http: HttpClient) { }
+
+  opts:any = [];
+  obtenerdatos() {
+    return this.opts.length ?
+      of(this.opts) :
+      this.http.get<any>('https://medlab.xhygnusnews.com/public/api/Cie10').pipe(tap(data => this.opts = data))
   }
 }
