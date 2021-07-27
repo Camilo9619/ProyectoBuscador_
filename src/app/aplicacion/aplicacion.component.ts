@@ -4,7 +4,16 @@ import { DataServicesService } from '../data-services.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
-
+import { tap, startWith, debounceTime, distinctUntilChanged, switchMap, map } from 'rxjs/operators';
+export interface Data {
+  cod:string;
+  name:string;
+  sexo:string;
+  liminferior:string;
+  limsuperior:string;
+}
+const ELEMENT_DATA: Data[] = [
+];
 @Component({
   selector: 'app-aplicacion',
   templateUrl: './aplicacion.component.html',
@@ -14,18 +23,28 @@ import { FormControl } from '@angular/forms';
 export class AplicacionComponent implements OnInit {
  usuario=new Usuario();
   public keyword="name";
-  public data$: Observable<any[]>;
   conversion: any;
   datos:[];
   filterPost='';
   myControl = new FormControl();
   options:any = [];
   filteredOptions: Observable<any[]>;
-
+  displayedColumns: string[] = ['id', 'userId', 'title', 'completed'];
+  dataSource :Observable<any[]>;
   constructor(
     private http:HttpClient,
     private dataserv:DataServicesService
-  ) { }
+  ) {
+    this.filteredOptions = this.myControl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap(val => {
+            return this.filter(val || '')
+       }) 
+    )
+    
+   }
 
   ngOnInit(): void {
  
@@ -39,7 +58,7 @@ export class AplicacionComponent implements OnInit {
     });
   }
   obtenerdatos():void{
-    this.data$=this.dataserv.obtenerdatos();
+    this.filteredOptions=this.dataserv.obtenerdatos();
   }
   datoentrada(value:any){
     
@@ -55,7 +74,7 @@ export class AplicacionComponent implements OnInit {
         .subscribe(data=>{
         this.conversion=data;
         this.datos=this.conversion;
-        this.data$=this.dataserv.obtenerdatos();
+        this.filteredOptions=this.dataserv.obtenerdatos();
       });
       }
     }
@@ -63,7 +82,17 @@ export class AplicacionComponent implements OnInit {
       return value;
     }
   }
+  filter(val: string): Observable<any[]> {
+    return this.dataserv.obtenerdatos()
+     .pipe(
+       map(response => response.filter(option => { 
+         return option.name.toLowerCase().indexOf(val.toLowerCase()) === 0
+       }))
+     )
+   } 
+  datosTabla(){
   
+  }
 }
 export class Usuario{
   dato:string;

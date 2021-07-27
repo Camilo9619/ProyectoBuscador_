@@ -11,6 +11,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatTableModule} from '@angular/material/table';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatInputModule} from '@angular/material/input';
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,6 +29,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     MatTableModule,
     MatFormFieldModule,
     MatAutocompleteModule,
+    MatInputModule
   ],
   providers: [],
   bootstrap: [AppComponent]
