@@ -56,7 +56,12 @@
           name="filterPost"
           [(ngModel)]="filterPost"
           [(ngModel)]="usuario.dato"
-          (ngModelChange)="obtenerdatosauto($event)">
+          (ngModelChange)="obtenerdatosauto($event)"
+          matInput [formControl]="myControl"
+          [matAutocomplete]="auto"
+          [(ngModel)]="filterPost"
+          [(ngModel)]="usuario.dato"
+          (ngModelChange)="datoentrada($event)">
           <mat-autocomplete #auto="matAutocomplete">
             <mat-option *ngFor="let option of filteredOptions | async" [value]="option.name">
               {{option.name}}

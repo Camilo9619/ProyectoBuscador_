@@ -98,7 +98,8 @@ export class AplicacionComponent implements OnInit{
     });
   }
   obtenerdatos(){
-    return this.opts.length ?
+
+    return this.opts.length?
     of(this.opts) :
     this.http.get<any>('https://medlab.xhygnusnews.com/public/api/Cie10').pipe(tap(data => this.opts = data))
   }
