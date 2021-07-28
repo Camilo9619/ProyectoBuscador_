@@ -8,11 +8,7 @@ import { tap, startWith, debounceTime, distinctUntilChanged, switchMap, map } fr
 
 export class DataServicesService {
   constructor(private http: HttpClient) { }
-
-  opts:any = [];
-  obtenerdatos() {
-    return this.opts.length ?
-    of(this.opts) :
-    this.http.get<any>('https://medlab.xhygnusnews.com/public/api/Cie10').pipe(tap(data => this.opts = data))
+  obtenerdatos(): Promise<any>{
+    return this.http.get('https://medlab.xhygnusnews.com/public/api/Cie10').toPromise();
   }
 }

@@ -1,10 +1,12 @@
   
 import { Component, OnInit } from '@angular/core';
 import { DataServicesService } from '../data-services.service';
+import { ServicioService } from '../servicio.service';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable,of } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { tap, startWith, debounceTime, distinctUntilChanged, switchMap, map } from 'rxjs/operators';
+import { MatTableDataSource } from '@angular/material/table';
 export interface Data {
   cod:string;
   name:string;
@@ -18,47 +20,49 @@ const ELEMENT_DATA: Data[] = [
   selector: 'app-aplicacion',
   templateUrl: './aplicacion.component.html',
   styleUrls: ['./aplicacion.component.css'],
-  providers:[DataServicesService]
-})
-export class AplicacionComponent implements OnInit {
- usuario=new Usuario();
-  public keyword="name";
-  conversion: any;
-  datos:[];
-  filterPost='';
-  myControl = new FormControl();
-  options:any = [];
-  filteredOptions: Observable<any[]>;
-  displayedColumns: string[] = ['id', 'userId', 'title', 'completed'];
-  dataSource :Observable<any[]>;
-  constructor(
-    private http:HttpClient,
-    private dataserv:DataServicesService
-  ) {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
-      startWith(''),
-      debounceTime(400),
-      distinctUntilChanged(),
-      switchMap(val => {
-            return this.filter(val || '')
-       }) 
-    )
-    
-   }
-
-  ngOnInit(): void {
  
-  }
-  ImprimirDatos(){
-    this.http.get('https://medlab.xhygnusnews.com/public/api/Cie10')
-    .subscribe(data=>{
-      this.conversion=data;
-      this.datos=this.conversion;
-      console.log('pruebaAPI',this.datos);
+})
+export class AplicacionComponent implements OnInit{
+  public keyword="name";
+  datos:[];
+  conversion: any;
+  usuario=new Usuario();
+  myControl = new FormControl();
+  filterPost='';
+  filteredOptions: Observable<any[]>;
+  displayedColumns:string[]=['cod','name','sexo','liminferior','limsuperior'];
+  dataSource:any[]=[];
+  opts = [];
+  constructor(private dataserv :DataServicesService,public http:HttpClient,
+    private serv:ServicioService){
+    this.dataserv.obtenerdatos().then(data => {
+      this.dataSource=data;
     });
   }
-  obtenerdatos():void{
-    this.filteredOptions=this.dataserv.obtenerdatos();
+  obtenerdatosauto(value:any){
+    
+    if(value!==""){
+      console.log(value);
+      console.log(this.usuario.dato);
+      this.usuario.dato=value;
+      let url='https://medlab.xhygnusnews.com/public/api/Cie10?ml=';
+      let busqueda=url+value;
+      debugger;
+      if(value.length>3){
+        this.filteredOptions = this.myControl.valueChanges.pipe(
+          startWith(''),
+          debounceTime(400),
+          distinctUntilChanged(),
+          switchMap(val => {
+                return this.filter(val || '')
+           }) 
+        )
+      }
+    }
+    else{
+      return value;
+    }
+ 
   }
   datoentrada(value:any){
     
@@ -69,12 +73,12 @@ export class AplicacionComponent implements OnInit {
       let url='https://medlab.xhygnusnews.com/public/api/Cie10?ml=';
       let busqueda=url+value;
       debugger;
-      if(value.length>3){
+      if(value.length>=3){
         this.http.get(busqueda)
         .subscribe(data=>{
         this.conversion=data;
         this.datos=this.conversion;
-        this.filteredOptions=this.dataserv.obtenerdatos();
+        this.dataserv.obtenerdatos();
       });
       }
     }
@@ -82,17 +86,30 @@ export class AplicacionComponent implements OnInit {
       return value;
     }
   }
+  ngOnInit() {
+
+  }
+  ImprimirDatos(){
+    this.http.get('https://medlab.xhygnusnews.com/public/api/Cie10')
+    .subscribe(data=>{
+      this.conversion=data;
+      this.datos=this.conversion;
+      console.log('pruebaAPI',this.datos);
+    });
+  }
+  obtenerdatos(){
+    return this.opts.length ?
+    of(this.opts) :
+    this.http.get<any>('https://medlab.xhygnusnews.com/public/api/Cie10').pipe(tap(data => this.opts = data))
+  }
   filter(val: string): Observable<any[]> {
-    return this.dataserv.obtenerdatos()
+    return this.serv.obtenerdatosapilista()
      .pipe(
        map(response => response.filter(option => { 
          return option.name.toLowerCase().indexOf(val.toLowerCase()) === 0
        }))
      )
-   } 
-  datosTabla(){
-  
-  }
+   }  
 }
 export class Usuario{
   dato:string;
